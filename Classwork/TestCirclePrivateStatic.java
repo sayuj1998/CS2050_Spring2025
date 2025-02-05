@@ -1,4 +1,4 @@
-//comments go here
+package Classwork;//comments go here
 
 public class TestCirclePrivateStatic
 {
@@ -49,7 +49,7 @@ public class TestCirclePrivateStatic
         }
     }
 
-}//end TestCirclePrivateStatic
+}//end Classwork.TestCirclePrivateStatic
 
 // start of class is after end of class above
 //comments would go here

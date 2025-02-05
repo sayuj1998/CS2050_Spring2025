@@ -1,3 +1,4 @@
+package Classwork;
 
 /**
  * Add comments
@@ -58,7 +59,7 @@ class SimpleGeometricShape {
 
     @Override
     public String toString() {
-        System.out.println("In SimpleGeometricShape toString method ");
+        System.out.println("In Classwork.SimpleGeometricShape toString method ");
         return "created on" + dateCreated + "\ncolor:" + color + "and filled: "+ filled;
     }
     /**
@@ -103,7 +104,7 @@ class SimpleGeometricShape {
         return dateCreated;
     }
 
-}//end SimpleGeometricShape class
+}//end Classwork.SimpleGeometricShape class
 
 class RectangleFromSimpleGeometricShape extends SimpleGeometricShape {
     private double width;
@@ -214,4 +215,4 @@ class CircleFromSimpleGeometricShape
         return 2 * radius * Math.PI;
     }
 
-}//end CircleFromSimpleGeometricShape class
+}//end Classwork.CircleFromSimpleGeometricShape class
