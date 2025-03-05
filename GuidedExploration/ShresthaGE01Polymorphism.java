@@ -1,3 +1,5 @@
+package GuidedExploration;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -5,7 +7,7 @@ import java.util.Scanner;
 public class ShresthaGE01Polymorphism {
     public static void main(String[] args) {
         try {
-            File animalsFile = new File("Animals.txt");
+            File animalsFile = new File("Classwork/Animals.txt");
             Scanner fileScanner = new Scanner(animalsFile);
 
             int arraySize = fileScanner.nextInt();
@@ -21,13 +23,13 @@ public class ShresthaGE01Polymorphism {
                 int sleep = fileScanner.nextInt();
                 String location = fileScanner.nextLine().trim();
 
-                if (type.equals("Bear")) {
+                if (type.equals("GuidedExploration.Bear")) {
                     animals[index] = new Bear(name, food, weight, sleep, location);
-                } else if (type.equals("Elephant")) {
+                } else if (type.equals("GuidedExploration.Elephant")) {
                     animals[index] = new Elephant(name, food, weight, sleep, location);
-                } else if (type.equals("Monkey")) {
+                } else if (type.equals("GuidedExploration.Monkey")) {
                     animals[index] = new Monkey(name, food, weight, sleep, location);
-                } else if (type.equals("Sloth")) {
+                } else if (type.equals("GuidedExploration.Sloth")) {
                     animals[index] = new Sloth(name, food, weight, sleep, location);
                 }
             }
@@ -37,15 +39,15 @@ public class ShresthaGE01Polymorphism {
             for (int index = 0; index < animals.length; index++) {
                 Animal animal = animals[index];
 
-                System.out.print("Animal[" + index + "] is a ");
+                System.out.print("GuidedExploration.Animal[" + index + "] is a ");
                 if (animal instanceof Bear) {
-                    System.out.print("Bear\n");
+                    System.out.print("GuidedExploration.Bear\n");
                 } else if (animal instanceof Elephant) {
-                    System.out.print("Elephant\n");
+                    System.out.print("GuidedExploration.Elephant\n");
                 } else if (animal instanceof Monkey) {
-                    System.out.print("Monkey\n");
+                    System.out.print("GuidedExploration.Monkey\n");
                 } else if (animal instanceof Sloth) {
-                    System.out.print("Sloth\n");
+                    System.out.print("GuidedExploration.Sloth\n");
                 }
 
                 System.out.println(animal);
@@ -95,15 +97,15 @@ class Animal {
     }
 
     public void eat() {
-        System.out.println("Animal is eating");
+        System.out.println("GuidedExploration.Animal is eating");
     }
     public void sleep() {
-        System.out.println("Animal is sleeping");
+        System.out.println("GuidedExploration.Animal is sleeping");
     }
     public void swim() {
-        System.out.println("Animal is swimming");
+        System.out.println("GuidedExploration.Animal is swimming");
     }
-} // end Animal
+} // end GuidedExploration.Animal
 
 class Bear extends Animal {
     public Bear(String name, String food, int weight, int sleep, String location) {
@@ -112,25 +114,25 @@ class Bear extends Animal {
 
     @Override
     public void eat() {
-        System.out.println("Bear is eating " + getFood());
+        System.out.println("GuidedExploration.Bear is eating " + getFood());
     }
 
     @Override
     public void sleep() {
-        System.out.println("Bear is sleeping " + getSleep() + " hours");
+        System.out.println("GuidedExploration.Bear is sleeping " + getSleep() + " hours");
     }
 
     @Override
     public void swim() {
-        System.out.println("Bear is swimming");
+        System.out.println("GuidedExploration.Bear is swimming");
     }
 
     @Override
     public String toString() {
-        return "Bear: Name: " + getName() + " - Weighs: " + getWeight() + " lbs - Sleeps: " + getSleep() + " hours - Location: " + getLocation();
+        return "GuidedExploration.Bear: Name: " + getName() + " - Weighs: " + getWeight() + " lbs - Sleeps: " + getSleep() + " hours - Location: " + getLocation();
     }
 
-} // end Bear
+} // end GuidedExploration.Bear
 
 class Elephant extends Animal {
     public Elephant(String name, String food, int weight, int sleep, String location) {
@@ -139,15 +141,15 @@ class Elephant extends Animal {
 
     @Override
     public void sleep() {
-        System.out.println("Elephant is sleeping " + getSleep() + " hours");
+        System.out.println("GuidedExploration.Elephant is sleeping " + getSleep() + " hours");
     }
 
     @Override
     public String toString() {
-        return "Elephant: Name: " + getName() + " - Weighs: " + getWeight() + " lbs - Sleeps: " + getSleep() + " hours - Location: " + getLocation();
+        return "GuidedExploration.Elephant: Name: " + getName() + " - Weighs: " + getWeight() + " lbs - Sleeps: " + getSleep() + " hours - Location: " + getLocation();
     }
 
-} // end Elephant
+} // end GuidedExploration.Elephant
 
 class Monkey extends Animal {
     public Monkey(String name, String food, int weight, int sleep, String location) {
@@ -156,20 +158,20 @@ class Monkey extends Animal {
 
     @Override
     public void eat() {
-        System.out.println("Monkey is eating " + getFood());
+        System.out.println("GuidedExploration.Monkey is eating " + getFood());
     }
 
     @Override
     public void swim() {
-        System.out.println("Monkey is swimming");
+        System.out.println("GuidedExploration.Monkey is swimming");
     }
 
     @Override
     public String toString() {
-        return "Monkey: Name: " + getName() + " - Weighs: " + getWeight() + " lbs - Sleeps: " + getSleep() + " hours - Location: " + getLocation();
+        return "GuidedExploration.Monkey: Name: " + getName() + " - Weighs: " + getWeight() + " lbs - Sleeps: " + getSleep() + " hours - Location: " + getLocation();
     }
 
-} // end Monkey
+} // end GuidedExploration.Monkey
 
 class Sloth extends Animal {
     public Sloth(String name, String food, int weight, int sleep, String location) {
@@ -178,8 +180,7 @@ class Sloth extends Animal {
 
     @Override
     public String toString() {
-        return "Sloth: Name: " + getName() + " - Weighs: " + getWeight() + " lbs - Sleeps: " + getSleep() + " hours - Location: " + getLocation();
+        return "GuidedExploration.Sloth: Name: " + getName() + " - Weighs: " + getWeight() + " lbs - Sleeps: " + getSleep() + " hours - Location: " + getLocation();
     }
 
-} // end Sloth
-
+} // end GuidedExploration.Sloth

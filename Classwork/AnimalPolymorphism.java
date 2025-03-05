@@ -1,4 +1,4 @@
-/**
+package Classwork; /**
  *  Add comments to explain concepts
  */
 
@@ -53,7 +53,7 @@ public class AnimalPolymorphism
 
     }// end of main
 
-}// end of AnimalPolymorphism class
+}// end of Classwork.AnimalPolymorphism class
 
 class AnimalP
 {

@@ -1,3 +1,4 @@
+package GuidedExploration;
 
 public class ShresthaTestSimpleRectangle {
 
@@ -75,4 +76,4 @@ class SimpleRectangle {
         }
     }
 
-} // SimpleRectangle
+} // GuidedExploration.SimpleRectangle

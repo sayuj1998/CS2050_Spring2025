@@ -1,0 +1,8 @@
+7
+Sloth2 Ace Leaves 12 15 Urban Jungle
+GuidedExploration.Bear Po Bamboo 550 20 Asian Passage
+Monkey2 Rafiki Fruit 27 17 Lost Forest
+Sloth2 Sid Leaves 15 12 Urban Jungle
+Elephant2 Titan Grass 12500 4 Elephant2 Odyssey
+Monkey2 Louie Fruit 14 16 Lost Forest
+GuidedExploration.Bear Baloo Honey 1050 18 Asian Passage
