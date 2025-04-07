@@ -51,10 +51,10 @@ public class Driver {
                     vendingMachine.retrieveCar(floor, space);
                     break;
                 case 4:
-                    vendingMachine.printSortedInventoryByPrice();
+                    vendingMachine.printSortedInventory("price");
                     break;
                 case 5:
-                    vendingMachine.printSortedInventoryByYear();
+                    vendingMachine.printSortedInventory("year");
                     break;
                 case 6:
                     System.out.println("Exiting program. Goodbye!");
@@ -224,24 +224,20 @@ class VendingMachine {
     }//end retrieveCar method
 
     /**
-     * Prints the inventory sorted by price
+     * Prints the inventory sorted by price and year
      */
-    public void printSortedInventoryByPrice() {
+    public void printSortedInventory(String sortType) {
         Car[] cars = flatten2DArrayTo1DArray();
-        insertionSortByPrice(cars);
-        System.out.println("Sorted Inventory by Price:");
-        printCars(cars);
-    }//end printSortedInventoryByPrice method
+        insertionSort(cars, sortType);
 
-    /**
-     * Prints the inventory sorted by year
-     */
-    public void printSortedInventoryByYear() {
-        Car[] cars = flatten2DArrayTo1DArray();
-        insertionSortByYear(cars);
-        System.out.println("Sorted Inventory by Year:");
+        if (sortType.equals("price")) {
+            System.out.println("Sorted Inventory by Price:");
+        } else {
+            System.out.println("Sorted Inventory by Year:");
+        }
+
         printCars(cars);
-    }//end printSortedInventoryByYear method
+    }//end printSortedInventory method
 
     /**
      * @param cars Prints the array of cars
@@ -278,37 +274,29 @@ class VendingMachine {
     }//end flatten2DArrayTo1DArray method
 
     /**
-     * Sorts an array of cars by price using insertion sort
+     * Sorts an array of cars by price and year using insertion sort
      *
      * @param cars the array of cars to sort
      */
-    private void insertionSortByPrice(Car[] cars) {
+    private void insertionSort(Car[] cars, String sortType) {
         for (int i = 1; i < cars.length; i++) {
             Car key = cars[i];
             int j = i - 1;
-            while (j >= 0 && cars[j].getPrice() > key.getPrice()) {
-                cars[j + 1] = cars[j];
-                j = j - 1;
-            }
-            cars[j + 1] = key;
-        }
-    }//end of insertionSortByPrice
 
-    /**
-     * Sorts an array of cars by year using insertion sort
-     *
-     * @param cars the array of cars to sort
-     */
-    private void insertionSortByYear(Car[] cars) {
-        for (int i = 1; i < cars.length; i++) {
-            Car key = cars[i];
-            int j = i - 1;
-            while (j >= 0 && cars[j].getYear() > key.getYear()) {
-                cars[j + 1] = cars[j];
-                j = j - 1;
+            if (sortType.equals("price")) {
+                while (j >= 0 && cars[j].getPrice() > key.getPrice()) {
+                    cars[j + 1] = cars[j];
+                    j = j - 1;
+                }
+            } else {
+                while (j >= 0 && cars[j].getYear() > key.getYear()) {
+                    cars[j + 1] = cars[j];
+                    j = j - 1;
+                }
             }
+
             cars[j + 1] = key;
         }
-    }
-}//end of insertionSortByYear
+    }//end of insertionSort method
+}
 
