@@ -40,7 +40,7 @@ public class Driver {
 
             switch (choice) {
                 case 1:
-                    System.out.print("Enter the file name: ");
+                    System.out.print("\nEnter the file name: ");
                     String filename = scanner.next();
                     readCarFromFile(filename, vendingMachine);
                     break;
@@ -48,7 +48,7 @@ public class Driver {
                     vendingMachine.displayInventory();
                     break;
                 case 3:
-                    System.out.print("Enter floor: ");
+                    System.out.print("\nEnter floor: ");
                     int floor = scanner.nextInt();
                     System.out.print("Enter space: ");
                     int space = scanner.nextInt();
@@ -61,14 +61,14 @@ public class Driver {
                     vendingMachine.printSortedInventory("year");
                     break;
                 case 6:
-                    System.out.print("Enter manufacturer: ");
+                    System.out.print("\nEnter manufacturer: ");
                     String manufacturer = scanner.next();
                     System.out.print("Enter car type (Basic/Premium): ");
                     String type = scanner.next();
                     vendingMachine.searchCars(manufacturer, type);
                     break;
                 case 7:
-                    System.out.print("Enter floor: ");
+                    System.out.print("\nEnter floor: ");
                     floor = scanner.nextInt();
                     System.out.print("Enter space: ");
                     space = scanner.nextInt();
@@ -78,18 +78,18 @@ public class Driver {
                     vendingMachine.processCarWashQueue();
                     break;
                 case 9:
-                    System.out.print("Enter floor of the car to sell: ");
+                    System.out.print("\nEnter floor of the car to sell: ");
                     floor = scanner.nextInt();
                     System.out.print("Enter space of the car to sell: ");
                     space = scanner.nextInt();
                     vendingMachine.sellCar(floor, space);
                     break;
                 case 10:
-                    System.out.print("Exiting program. Goodbye!");
+                    System.out.print("\nExiting program. Goodbye!");
                     runningProgram = false;
                     break;
                 default:
-                    System.out.println("Invalid choice. Please try again.");
+                    System.out.println("\nInvalid choice. Please try again.");
             }
         }
         scanner.close();
@@ -241,11 +241,11 @@ class VendingMachine {
         boolean addCar = true;
         String key = car.locationKey();
         if (car.floor < 1 || car.floor > floors || car.space < 1 || car.space > spaces) {
-            System.out.println("Error: Invalid position at Floor " + (car.floor) + " Space " + (car.space));
+            System.out.println("\nError: Invalid position at Floor " + (car.floor) + " Space " + (car.space));
             System.out.println("Cannot place Car: " + car);
             addCar = false;
         } else if (carPositions.containsKey(key)) {
-            System.out.println("Error: Slot at Floor " + (car.floor) + " Space " + (car.space) + " is already occupied.");
+            System.out.println("\nError: Slot at Floor " + (car.floor) + " Space " + (car.space) + " is already occupied.");
             System.out.println(car.toString() + " cannot be placed.");
             addCar = false;
         } else {
@@ -266,12 +266,12 @@ class VendingMachine {
         String key = floor + "-" + space;
 
         if (!carPositions.containsKey(key)) {
-            System.out.println("No car found at Floor " + (floor) + " Space " + (space) + ".");
+            System.out.println("\nNo car found at Floor " + (floor) + " Space " + (space) + ".");
             sold = false;
         } else {
             Car car = carPositions.remove(key);
             inventory.remove(car);
-            System.out.println("Car Sold: " + car);
+            System.out.println("\nCar Sold: " + car);
         }
         return sold;
     }//end of sellCar method
@@ -281,7 +281,7 @@ class VendingMachine {
      */
     public void displayInventory() {
         if (inventory.isEmpty()) {
-            System.out.println("No cars in the vending machine.");
+            System.out.println("\nNo cars in the inventory.");
         } else {
             for (Car car : inventory) {
                 System.out.println(car);
@@ -299,10 +299,10 @@ class VendingMachine {
         Car car = null;
         String key = floor + "-" + space;
         if (!carPositions.containsKey(key)) {
-            System.out.println("Car not found at this location.");
+            System.out.println("\nCar not found at this location.");
         } else {
             car = carPositions.remove(key);
-            System.out.println("Car Retrieved: " + car);
+            System.out.println("\nCar Retrieved: " + car);
         }
         return car;
     }//end retrieveCar method
@@ -314,15 +314,15 @@ class VendingMachine {
      */
     public void printSortedInventory(String sortBy) {
         if (inventory.isEmpty()) {
-            System.out.println("No cars available.");
+            System.out.println("\nNo cars available.");
         } else {
             List<Car> sortedInvetory = new ArrayList<>(inventory);
             if (sortBy.equalsIgnoreCase("price")) {
                 sortedInvetory.sort(Comparator.comparingDouble(Car::getPrice));
-                System.out.println("Sorted Inventory by Price:");
+                System.out.println("\nSorted Inventory by Price:");
             } else if (sortBy.equalsIgnoreCase("year")) {
                 sortedInvetory.sort(Comparator.comparingInt(Car::getYear));
-                System.out.println("Sorted Inventory by Year:");
+                System.out.println("\nSorted Inventory by Year:");
             }
 
             for (Car car : sortedInvetory) {
@@ -347,7 +347,7 @@ class VendingMachine {
         }
 
         if (results.isEmpty()) {
-            System.out.println("No cars available.");
+            System.out.println("\nNo cars available.");
         } else {
             results.sort(Comparator.comparing(Car::getManufacturer));
             for (Car car : results) {
@@ -375,7 +375,7 @@ class VendingMachine {
      */
     public void processCarWashQueue() {
         if (carWashQueue.isEmpty()) {
-            System.out.println("No cars in the wash queue.");
+            System.out.println("\nNo cars in the wash queue.");
         } else {
             while (!carWashQueue.isEmpty()) {
                 System.out.println("Washing: " + carWashQueue.remove());
