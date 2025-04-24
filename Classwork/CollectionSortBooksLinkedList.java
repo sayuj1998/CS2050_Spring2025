@@ -98,6 +98,55 @@ public class CollectionSortBooksLinkedList
         List<Book> foundBooks2 = findBooks(bookInventory, "Cathy O’Neil", 2016);
         printBooks(foundBooks2, "Cathy O’Neil", 2016);
 
+        // Adding TreeMap
+        TreeMap<Integer, List<Book>> booksByYear = new TreeMap<>();
+        for (Book currentBook : bookInventory) {
+            booksByYear.putIfAbsent(currentBook.getYear(), new ArrayList<>());
+            booksByYear.get(currentBook.getYear()).add(currentBook);
+        }
+
+        // Iterate through booksByYear.entrySet()
+        // Books are automatically grouped and printed in year order
+        for (Map.Entry<Integer, List<Book>> entry : booksByYear.entrySet()) {
+            System.out.println("\nYear: " + entry.getKey());
+            for (Book book : entry.getValue()) {
+                System.out.println(book);
+            }
+        }
+
+        // Step 10
+        System.out.println("\nStep 10 HashMap of books by title:");
+        Map<String, Book> bookMapByTitle = new HashMap<>();
+        for (Book book : bookInventory) {
+            bookMapByTitle.put(book.getTitle(), book);
+        }
+
+        String searchTitle = "Hello World";
+        if (bookMapByTitle.containsKey(searchTitle)) {
+            System.out.println("Found book: " + bookMapByTitle.get(searchTitle));
+        } else {
+            System.out.println("Classwork.Book not found: " + searchTitle);
+        }
+
+        // Allow user to enter a book title, author and year
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter Title: ");
+        String title = scanner.nextLine();
+
+        System.out.print("Enter Author: ");
+        String author = scanner.nextLine();
+
+        System.out.print("Enter Year: ");
+        int year = scanner.nextInt();
+
+        if (bookMapByTitle.containsKey(title + author + year)) {
+            System.out.println("Found book: " + bookMapByTitle.get(title + author + year));
+        } else {
+            System.out.println("Classwork.Book not found: " + title + " " + author + " " + year);
+        }
+
+
     }
     public static List<Book> findBooksByAuthor(List<Book> inventory, String author) {
         List<Book> results = new ArrayList<>();

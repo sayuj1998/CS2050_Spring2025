@@ -1,12 +1,12 @@
-/*
- * This program simulates a car vending machine with multiple floors and spaces.
- * It allows loading car data from a file and displaying the vending machine.
- * It retrieves cars, and sorts the inventory by price or year.
- */
-
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Scanner;
+import java.util.*;
+
+/*
+ * This program simulates a car vending machine with multiple floors and spaces.
+ * It allows loading car data from a file, displaying the vending machine, retrieving cars,
+ * sorting the inventory, searching cars, processing a car wash queue, and selling cars.
+ */
 
 public class Driver {
     /**
@@ -25,12 +25,16 @@ public class Driver {
         boolean runningProgram = true;
         while (runningProgram) {
             System.out.println("\n=== Car Vending Machine Menu ===");
-            System.out.println("1. Load Car Data");
+            System.out.println("1. Load Car Data from File");
             System.out.println("2. Display Vending Machine");
-            System.out.println("3. Retrieve a Car");
+            System.out.println("3. Retrieve a Car by Location (Floor & Space)");
             System.out.println("4. Print Sorted Inventory (Price)");
             System.out.println("5. Print Sorted Inventory (Year)");
-            System.out.println("6. Exit");
+            System.out.println("6. Search for Cars (Manufacturer & Type)");
+            System.out.println("7. Add Car to Wash Queue");
+            System.out.println("8. Process Car Wash Queue");
+            System.out.println("9. Sell a Car");
+            System.out.println("10. Exit");
             System.out.print("\nEnter your choice: ");
             int choice = scanner.nextInt();
 
@@ -41,13 +45,13 @@ public class Driver {
                     readCarFromFile(filename, vendingMachine);
                     break;
                 case 2:
-                    vendingMachine.displayVendingMachine();
+                    vendingMachine.displayInventory();
                     break;
                 case 3:
-                    System.out.print("Enter floor to retrieve car: ");
-                    int floor = scanner.nextInt() - 1;
-                    System.out.print("Enter space to retrieve car: ");
-                    int space = scanner.nextInt() - 1;
+                    System.out.print("Enter floor: ");
+                    int floor = scanner.nextInt();
+                    System.out.print("Enter space: ");
+                    int space = scanner.nextInt();
                     vendingMachine.retrieveCar(floor, space);
                     break;
                 case 4:
@@ -57,7 +61,31 @@ public class Driver {
                     vendingMachine.printSortedInventory("year");
                     break;
                 case 6:
-                    System.out.println("Exiting program. Goodbye!");
+                    System.out.print("Enter manufacturer: ");
+                    String manufacturer = scanner.next();
+                    System.out.print("Enter car type (Basic/Premium): ");
+                    String type = scanner.next();
+                    vendingMachine.searchCars(manufacturer, type);
+                    break;
+                case 7:
+                    System.out.print("Enter floor: ");
+                    floor = scanner.nextInt();
+                    System.out.print("Enter space: ");
+                    space = scanner.nextInt();
+                    vendingMachine.addToCarWashQueue(floor, space);
+                    break;
+                case 8:
+                    vendingMachine.processCarWashQueue();
+                    break;
+                case 9:
+                    System.out.print("Enter floor of the car to sell: ");
+                    floor = scanner.nextInt();
+                    System.out.print("Enter space of the car to sell: ");
+                    space = scanner.nextInt();
+                    vendingMachine.sellCar(floor, space);
+                    break;
+                case 10:
+                    System.out.print("Exiting program. Goodbye!");
                     runningProgram = false;
                     break;
                 default:
@@ -76,14 +104,21 @@ public class Driver {
         try {
             Scanner fileScanner = new Scanner(new File(fileName));
             while (fileScanner.hasNext()) {
+                String type = fileScanner.next();
                 int floor = fileScanner.nextInt();
                 int space = fileScanner.nextInt();
                 int year = fileScanner.nextInt();
                 double price = fileScanner.nextDouble();
-                String make = fileScanner.next();
+                String manufacturer = fileScanner.next();
                 String model = fileScanner.next();
 
-                Car car = new Car(floor, space, year, price, make, model);
+                Car car;
+                if (type.equalsIgnoreCase("B")) {
+                    car = new BasicCar(floor, space, year, price, manufacturer, model);
+                } else {
+                    car = new PremiumCar(floor, space, year, price, manufacturer, model);
+                }
+
                 vendingMachine.addCar(car);
             }
             fileScanner.close();
@@ -96,38 +131,32 @@ public class Driver {
 /**
  * Car class represents a car with its details
  */
-class Car {
-    private int floor;
-    private int space;
-    private int year;
-    private double price;
-    private String make;
-    private String model;
+abstract class Car {
+    protected int floor;
+    protected int space;
+    protected int year;
+    protected double price;
+    protected String manufacturer;
+    protected String model;
 
     /**
      * @param floor floor of where the car if located
      * @param space space of where the car is located
      * @param year manufacturing year of the car
      * @param price price of the car
-     * @param make make of the car
+     * @param manufacturer make of the car
      * @param model model of the car
      */
-    public Car(int floor, int space, int year, double price, String make, String model) {
+    public Car(int floor, int space, int year, double price, String manufacturer, String model) {
         this.floor = floor;
         this.space = space;
         this.year = year;
         this.price = price;
-        this.make = make;
+        this.manufacturer = manufacturer;
         this.model = model;
     }
 
-    public int getFloor() {
-        return floor;
-    }
-
-    public int getSpace() {
-        return space;
-    }
+    public abstract String getType();
 
     public int getYear() {
         return year;
@@ -137,20 +166,48 @@ class Car {
         return price;
     }
 
-    public String getMake() {
-        return make;
+    public String getManufacturer() {
+        return manufacturer;
     }
 
-    public String getModel() {
-        return model;
+    public String locationKey() {
+        return floor + "-" + space;
     }
 
     @Override
     public String toString() {
-        return make + " " + model + " " + year + " - $" + price;
+        return getType() + " Car: " + manufacturer + " " + model + " " + year + " - $" + price + " (Floor: " + (floor)
+                + ", Space: " + (space) + ")";
+    }
+}//end Car class
+
+/**
+ * Constructs a BasicCar object.
+ */
+class BasicCar extends Car {
+    public BasicCar(int floor, int space, int year, double price, String manufacturer, String model) {
+        super(floor, space, year, price, manufacturer, model);
     }
 
-}//end Car class
+    @Override
+    public String getType() {
+        return "Basic";
+    }
+}//end BasicCar class
+
+/**
+ * Constructs a PremiumCar object.
+ */
+class PremiumCar extends Car {
+    public PremiumCar(int floor, int space, int year, double price, String manufacturer, String model) {
+        super(floor, space, year, price, manufacturer, model);
+    }
+
+    @Override
+    public String getType() {
+        return "Premium";
+    }
+}//end PremiumCar
 
 /**
  * Vending machine class represents a car vending machine with multiple floors and spaces
@@ -158,7 +215,9 @@ class Car {
 class VendingMachine {
     private int floors;
     private int spaces;
-    private Car[][] inventory;
+    private LinkedList<Car> inventory;
+    private Map<String, Car> carPositions;
+    private Queue<Car> carWashQueue;
 
     /**
      * @param floors number of floors in the vending machine
@@ -167,46 +226,68 @@ class VendingMachine {
     public VendingMachine(int floors, int spaces) {
         this.floors = floors;
         this.spaces = spaces;
-        this.inventory = new Car[floors][spaces];
+        inventory = new LinkedList<>();
+        carPositions = new HashMap<>();
+        carWashQueue = new LinkedList<>();
     }
 
     /**
      * Adds a car to the vending machine
      *
      * @param car the car to add
+     * @return True if the car was added successfully, false otherwise
      */
-    public void addCar(Car car) {
-        int floor = car.getFloor();
-        int space = car.getSpace();
-        if (floor >= floors || space >= spaces) {
-            System.out.println("Error: Invalid position at Floor: " + (floor + 1) + " Space: " + (space + 1));
-            System.out.println("Can not place Car " + car.getMake() + " " + car.getModel() + " " + car.getYear() + " - $" + car.getPrice());
-
-        } else if (inventory[floor][space] != null) {
-            System.out.println("Error: Slot at Floor: " + (floor + 1) + " Space: " + (space + 1) + " is already occupied.");
-            System.out.println("Car " + car.getMake() + " " + car.getModel() + " " + car.getYear() + " - $" + car.getPrice() + " cannot be placed.");
-
+    public boolean addCar(Car car) {
+        boolean addCar = true;
+        String key = car.locationKey();
+        if (car.floor < 1 || car.floor > floors || car.space < 1 || car.space > spaces) {
+            System.out.println("Error: Invalid position at Floor " + (car.floor) + " Space " + (car.space));
+            System.out.println("Cannot place Car: " + car);
+            addCar = false;
+        } else if (carPositions.containsKey(key)) {
+            System.out.println("Error: Slot at Floor " + (car.floor) + " Space " + (car.space) + " is already occupied.");
+            System.out.println(car.toString() + " cannot be placed.");
+            addCar = false;
         } else {
-            inventory[floor][space] = car;
+            inventory.add(car);
+            carPositions.put(key, car);
         }
+        return addCar;
     }//end addCar method
 
     /**
-     * Displays the vending machine
+     * Sells a car by removing it from the vending machine
+     *
+     * @param floor Floor where the car is located
+     * @param space Space where the car is located
      */
-    public void displayVendingMachine() {
-        for (int floor = 0; floor < floors; floor++) {
-            System.out.println("Floor " + (floor + 1) + ":");
-            for (int space = 0; space < spaces; space++) {
-                Car car = inventory[floor][space];
-                if (car == null) {
-                    System.out.println("\tSpace " + (space + 1) + ": EMPTY");
-                } else {
-                    System.out.println("\tSpace " + (space + 1) + ": " + car);
-                }
+    public boolean sellCar(int floor, int space) {
+        boolean sold = true;
+        String key = floor + "-" + space;
+
+        if (!carPositions.containsKey(key)) {
+            System.out.println("No car found at Floor " + (floor) + " Space " + (space) + ".");
+            sold = false;
+        } else {
+            Car car = carPositions.remove(key);
+            inventory.remove(car);
+            System.out.println("Car Sold: " + car);
+        }
+        return sold;
+    }//end of sellCar method
+
+    /**
+     * Displays all cars in the vending machine inventory.
+     */
+    public void displayInventory() {
+        if (inventory.isEmpty()) {
+            System.out.println("No cars in the vending machine.");
+        } else {
+            for (Car car : inventory) {
+                System.out.println(car);
             }
         }
-    }//end displayVendingMachine method
+    }//end displayInventory method
 
     /**
      * Retrieves a car from the vending machine
@@ -214,89 +295,91 @@ class VendingMachine {
      * @param floor the floor to retrieve the car from
      * @param space the space to retrieve the car from
      */
-    public void retrieveCar(int floor, int space) {
-        Car car = inventory[floor][space];
-        if (car == null) {
-            System.out.println("No car located at Floor " + (floor + 1) + " Location " + (space + 1));
+    public Car retrieveCar(int floor, int space) {
+        Car car = null;
+        String key = floor + "-" + space;
+        if (!carPositions.containsKey(key)) {
+            System.out.println("Car not found at this location.");
         } else {
-            System.out.println("Car retrieved from Floor " + (floor + 1) + " Location " + (space + 1) + ": " + car);
+            car = carPositions.remove(key);
+            System.out.println("Car Retrieved: " + car);
         }
+        return car;
     }//end retrieveCar method
 
     /**
-     * Prints the inventory sorted by price and year
+     * Prints the sorted inventory based on a given sort criterion.
+     *
+     * @param sortBy Criterion to sort by (price or year)
      */
-    public void printSortedInventory(String sortType) {
-        Car[] cars = flatten2DArrayTo1DArray();
-        insertionSort(cars, sortType);
-
-        if (sortType.equals("price")) {
-            System.out.println("Sorted Inventory by Price:");
+    public void printSortedInventory(String sortBy) {
+        if (inventory.isEmpty()) {
+            System.out.println("No cars available.");
         } else {
-            System.out.println("Sorted Inventory by Year:");
-        }
+            List<Car> sortedInvetory = new ArrayList<>(inventory);
+            if (sortBy.equalsIgnoreCase("price")) {
+                sortedInvetory.sort(Comparator.comparingDouble(Car::getPrice));
+                System.out.println("Sorted Inventory by Price:");
+            } else if (sortBy.equalsIgnoreCase("year")) {
+                sortedInvetory.sort(Comparator.comparingInt(Car::getYear));
+                System.out.println("Sorted Inventory by Year:");
+            }
 
-        printCars(cars);
-    }//end printSortedInventory method
-
-    /**
-     * @param cars Prints the array of cars
-     */
-    private void printCars(Car[] cars) {
-        for (int i = 0; i < cars.length; i++) {
-            if (cars[i] != null) {
-                System.out.println(cars[i]);
+            for (Car car : sortedInvetory) {
+                System.out.println(car);
             }
         }
-    }//end printCars method
+    }//end printInventory method
 
     /**
-     * Flattens the 2D array of cars into a 1D array
+     * Searches for cars based on manufacturer and type.
      *
-     * @return the flattened 1D array of cars
+     * @param manufacturer Manufacturer of the car
+     * @param type Type of the car (Basic or Premium)
      */
-    private Car[] flatten2DArrayTo1DArray() {
-        Car[] cars = new Car[floors * spaces];
-        int count = 0;
-        for (int floor = 0; floor < floors; floor++) {
-            for (int space = 0; space < spaces; space++) {
-                if (inventory[floor][space] != null) {
-                    cars[count++] = inventory[floor][space];
-                }
+    public void searchCars(String manufacturer, String type) {
+        List<Car> results = new ArrayList<>();
+
+        for (Car car : inventory) {
+            if (car.getManufacturer().equals(manufacturer) && car.getType().equals(type)) {
+                results.add(car);
             }
         }
 
-        Car[] flattenedArray = new Car[count];
-        for (int i = 0; i < count; i++) {
-            flattenedArray[i] = cars[i];
+        if (results.isEmpty()) {
+            System.out.println("No cars available.");
+        } else {
+            results.sort(Comparator.comparing(Car::getManufacturer));
+            for (Car car : results) {
+                System.out.println(car);
+            }
         }
-        return flattenedArray;
-    }//end flatten2DArrayTo1DArray method
+    }//end searchCars
 
     /**
-     * Sorts an array of cars by price and year using insertion sort
+     * Adds a car to the car wash queue.
      *
-     * @param cars the array of cars to sort
+     * @param floor Floor where the car is located
+     * @param space Space where the car is located
      */
-    private void insertionSort(Car[] cars, String sortType) {
-        for (int i = 1; i < cars.length; i++) {
-            Car key = cars[i];
-            int j = i - 1;
-
-            if (sortType.equals("price")) {
-                while (j >= 0 && cars[j].getPrice() > key.getPrice()) {
-                    cars[j + 1] = cars[j];
-                    j = j - 1;
-                }
-            } else {
-                while (j >= 0 && cars[j].getYear() > key.getYear()) {
-                    cars[j + 1] = cars[j];
-                    j = j - 1;
-                }
-            }
-
-            cars[j + 1] = key;
+    public void addToCarWashQueue(int floor, int space) {
+        Car car = retrieveCar(floor, space);
+        if (car != null) {
+            carWashQueue.add(car);
+            System.out.println("Car added to wash queue.");
         }
-    }//end of insertionSort method
-}
+    }//end addToCarWashQueue method
 
+    /**
+     * Processes all cars in the car wash queue.
+     */
+    public void processCarWashQueue() {
+        if (carWashQueue.isEmpty()) {
+            System.out.println("No cars in the wash queue.");
+        } else {
+            while (!carWashQueue.isEmpty()) {
+                System.out.println("Washing: " + carWashQueue.remove());
+            }
+        }
+    }//end processCarWashQueue method
+}//end VendingMachine class
