@@ -24,18 +24,7 @@ public class Driver {
 
         boolean runningProgram = true;
         while (runningProgram) {
-            System.out.println("\n=== Car Vending Machine Menu ===");
-            System.out.println("1. Load Car Data from File");
-            System.out.println("2. Display Vending Machine");
-            System.out.println("3. Retrieve a Car by Location (Floor & Space)");
-            System.out.println("4. Print Sorted Inventory (Price)");
-            System.out.println("5. Print Sorted Inventory (Year)");
-            System.out.println("6. Search for Cars (Manufacturer & Type)");
-            System.out.println("7. Add Car to Wash Queue");
-            System.out.println("8. Process Car Wash Queue");
-            System.out.println("9. Sell a Car");
-            System.out.println("10. Exit");
-            System.out.print("\nEnter your choice: ");
+            printMenu();
             int choice = scanner.nextInt();
 
             switch (choice) {
@@ -94,6 +83,24 @@ public class Driver {
         }
         scanner.close();
     }//end main method
+
+    /**
+     * Prints the vending machine menu
+     */
+    private static void printMenu() {
+        System.out.println("\n=== Car Vending Machine Menu ===");
+        System.out.println("1. Load Car Data from File");
+        System.out.println("2. Display Vending Machine");
+        System.out.println("3. Retrieve a Car by Location (Floor & Space)");
+        System.out.println("4. Print Sorted Inventory (Price)");
+        System.out.println("5. Print Sorted Inventory (Year)");
+        System.out.println("6. Search for Cars (Manufacturer & Type)");
+        System.out.println("7. Add Car to Wash Queue");
+        System.out.println("8. Process Car Wash Queue");
+        System.out.println("9. Sell a Car");
+        System.out.println("10. Exit");
+        System.out.print("\nEnter your choice: ");
+    }
 
     /**
      * Reads car data from a file and adds it to the vending machine
